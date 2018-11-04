@@ -20,7 +20,7 @@ class Admin {
 
 		if (
 			$request->has('auth') &&
-			sha1( 'full-access' ) !== $request->input('auth')
+			sha1( env('ADMIN_PASS') ) !== $request->input('auth')
 		) {
 
 			return abort('404');
