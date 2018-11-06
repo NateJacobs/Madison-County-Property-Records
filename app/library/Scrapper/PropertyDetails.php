@@ -91,16 +91,19 @@ class PropertyDetails {
 
 		$address_array = explode( ' ', $address_string, 3 );
 
+		$part_number = null;
 		$street_number = null;
 		$street_name = $address_string;
 
 		if ( 1 < count( $address_array ) ) {
 			if ( '/' === $address_array[1] ) {
+				$part_number = 1;
 				$street_number = null;
 				$street_name = str_replace( ' ', '', $address_string );
 			}
 
 			if ( ctype_alpha( substr( $address_array[0], -1 ) ) & is_numeric( substr( $address_array[0], 0, -1 ) ) ) {
+				$part_number = 2;
 				$street_number = $address_array[0];
 				$street_name = $address_array[1];
 			}
@@ -108,31 +111,71 @@ class PropertyDetails {
 			if ( is_numeric( $address_array[0] ) ) {
 				if ( ! is_numeric( $address_array[1] ) ) {
 					$street_number = $address_array[0];
-					$street_name = $address_array[1];
+
+					if ( isset( $address_array[2] ) ) {
+						$part_number = 3;
+						$street_name = $address_array[1].' '.$address_array[2];
+					} else {
+						$part_number = '3a';
+						$street_name = $address_array[1];
+					}
 				} elseif ( is_numeric( $address_array[1] ) ) {
-					$street_number = $address_array[0].'-'.$address_array[1];
+					$part_number = 4;
+					if ( '-' === substr( $address_array[1], 0, 1 ) ) {
+						$street_number = $address_array[0].''.$address_array[1];
+					} else {
+						$street_number = $address_array[0].'-'.$address_array[1];
+					}
+
 					$street_name = $address_array[2];
 				}
 			}
 
 			if ( strpos( $address_array[0], '-' ) ) {
+				$part_number = 5;
 				$num_len = strlen( $address_array[0] );
 				$name = substr( join( ' ', $address_array ), $num_len );
 				$street_number = trim( $address_array[0] );
 				$street_name = trim( $name );
 			}
 
-			if ( strpos( $address_array[1], '/' ) & is_numeric( $address_array[0] ) ) {
+			if ( false !== strpos( $address_array[1], '/' ) & is_numeric( $address_array[0] ) ) {
+				$part_number = 6;
 				$num_len_1 = strlen( $address_array[0] );
 				$num_len_2 = strlen( $address_array[1] );
 				$num_len = ( $num_len_1 + $num_len_2 ) + 2;
 				$name = substr( join( ' ', $address_array ), $num_len );
 				$street_number = trim( $address_array[0] .' '.$address_array[1] );
+
+				$number_exploded = explode( ' ', $street_number );
+				if ( 1 < count( $number_exploded ) ) {
+					if ( '/' === substr( $number_exploded[1], 0, 1 ) ) {
+						$part_number = '6a';
+						$street_number = str_replace( [ ' ', '/' ], [ '', '-' ], $street_number );
+					}
+				}
 				$street_name = trim( $name );
+			}
+
+			if ( is_null( $part_number ) ) {
+				if ( false !== strpos( $address_array[0], '/' ) ) {
+					$slash_exploded = explode( '/', $address_array[0] );
+					if ( 1 < count( $slash_exploded ) ) {
+						$part_number = 7;
+						if ( is_numeric( $slash_exploded[0] ) ) {
+							$street_number = str_replace( '/', '-', $address_array[0] );
+							$sliced = array_slice( $address_array, 1, count( $address_array )-1, true );
+							$street_name = join( ' ', $sliced );
+						}
+					}
+				}
 			}
 		}
 
-		return [ 'number' => $street_number, 'name' => $address_string ];
+		return [
+			'number' => $street_number,
+			'name' => $street_name,
+		];
 	}
 
 	public function get_tax_id( $report ) {
