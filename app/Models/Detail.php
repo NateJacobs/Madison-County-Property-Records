@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Detail extends Model {
 
-	protected $hidden = [ 'created_at', 'updated_at' ];
+	protected $hidden = [ 'created_at', 'updated_at', 'back_up_address' ];
+
+	protected $appends = [ 'full_address', 'self_url' ];
 
 	protected $fillable = [
 		'municipality',
@@ -35,5 +37,17 @@ class Detail extends Model {
 
 	public function sales() {
 		return $this->hasMany( 'App\Models\Sale' );
+	}
+
+	public function getFullAddressAttribute() {
+		return "{$this->street_number} {$this->street_name}";
+	}
+
+	public function getFmvValueAttribute( $value ) {
+		return '$'.number_format( $value );
+	}
+
+	public function getSelfUrlAttribute() {
+		return url("/api/v1/{$this->id}");
 	}
 }
