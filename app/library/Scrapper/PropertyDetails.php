@@ -16,7 +16,7 @@ class PropertyDetails {
 	}
 
 	public function get_property_description( $report ) {
-		$description = $report->filter('span#lblLegalPropertyDesc')->text();
+		$description = trim( $report->filter('span#lblLegalPropertyDesc')->text() );
 
 		if ( empty( $description ) ) {
 			$description = '';
