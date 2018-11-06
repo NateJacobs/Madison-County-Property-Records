@@ -8,7 +8,7 @@ class Detail extends Model {
 
 	protected $hidden = [ 'created_at', 'updated_at', 'back_up_address' ];
 
-	protected $appends = [ 'full_address', 'self_url' ];
+	protected $appends = [ 'full_street_address', 'self_url' ];
 
 	protected $fillable = [
 		'municipality',
@@ -39,7 +39,7 @@ class Detail extends Model {
 		return $this->hasMany( 'App\Models\Sale' );
 	}
 
-	public function getFullAddressAttribute() {
+	public function getFullStreetAddressAttribute() {
 		return "{$this->street_number} {$this->street_name}";
 	}
 
