@@ -104,6 +104,10 @@ class PropertyController extends Controller {
 			$where[] = [ 'fmv_value', '!=', 0 ];
 		}
 
+		if ( $request->filled('bedrooms') ) {
+			$where[] = [ 'bedrooms', $request->input('bedrooms') ];
+		}
+
 		return $where;
 	}
 }
