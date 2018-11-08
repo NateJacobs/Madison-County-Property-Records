@@ -52,8 +52,8 @@ class PropertyController extends Controller {
 			$where[] = [ 'street_name', $request->input('street-name') ];
 		}
 
-		if ( $request->filled('city') ) {
-			$where[] = [ 'municipality', $request->input('city') ];
+		if ( $request->filled('municipality') ) {
+			$where[] = [ 'municipality', $request->input('municipality') ];
 		}
 
 		if ( $request->filled('class') ) {
@@ -74,24 +74,34 @@ class PropertyController extends Controller {
 			$where[] = [ 'year_built', '!=', 0 ];
 		}
 
-		if ( $request->filled('sqft-bigger') ) {
-			$where[] = [ 'square_footage', '>=', $request->input('sqft-bigger') ];
+		if ( $request->filled('sqft-greater') ) {
+			$where[] = [ 'square_footage', '>=', $request->input('sqft-greater') ];
 			$where[] = [ 'square_footage', '!=', 0 ];
 		}
 
-		if ( $request->filled('sqft-smaller') ) {
-			$where[] = [ 'square_footage', '<=', $request->input('sqft-smaller') ];
+		if ( $request->filled('sqft-less') ) {
+			$where[] = [ 'square_footage', '<=', $request->input('sqft-less') ];
 			$where[] = [ 'square_footage', '!=', 0 ];
 		}
 
-		if ( $request->filled('acre-bigger') ) {
-			$where[] = [ 'acres', '>=', $request->input('acre-bigger') ];
+		if ( $request->filled('acre-greater') ) {
+			$where[] = [ 'acres', '>=', $request->input('acre-greater') ];
 			$where[] = [ 'acres', '!=', 0 ];
 		}
 
-		if ( $request->filled('acre-smaller') ) {
-			$where[] = [ 'acres', '<=', $request->input('acre-smaller') ];
+		if ( $request->filled('acre-less') ) {
+			$where[] = [ 'acres', '<=', $request->input('acre-less') ];
 			$where[] = [ 'acres', '!=', 0 ];
+		}
+
+		if ( $request->filled('value-greater') ) {
+			$where[] = [ 'fmv_value', '>=', $request->input('value-greater') ];
+			$where[] = [ 'fmv_value', '!=', 0 ];
+		}
+
+		if ( $request->filled('value-less') ) {
+			$where[] = [ 'fmv_value', '<=', $request->input('value-less') ];
+			$where[] = [ 'fmv_value', '!=', 0 ];
 		}
 
 		return $where;
