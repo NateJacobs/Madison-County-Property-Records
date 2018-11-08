@@ -57,7 +57,7 @@ class PropertyController extends Controller {
 		}
 
 		if ( $request->filled('class') ) {
-			$where[] = [ 'property_class_code', $request->input('class') ];
+			$where[] = [ 'class_code', $request->input('class') ];
 		}
 
 		if ( $request->filled('year-built') ) {
