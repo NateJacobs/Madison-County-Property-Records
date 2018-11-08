@@ -48,6 +48,6 @@ class Detail extends Model {
 	}
 
 	public function getSelfUrlAttribute() {
-		return url("/api/v1/{$this->id}");
+		return url("/api/v1/property/{$this->id}");
 	}
 }
