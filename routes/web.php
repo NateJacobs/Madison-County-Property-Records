@@ -29,10 +29,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 	});
 
 	// single property retrieval by ID
-	$router->get('/property/{id}', function( $id ) use ( $router ) {
-		return App\Models\Detail::with( [ 'sales', 'owners' ] )->where('id', $id)->get()->toArray();
-	});
+	$router->get(
+		'/property/{id}',
+		[ 'as' => 'singleProperty', 'uses' => 'PropertyController@show' ]
+	);
 
 	// multiple property retrievel by filter parameters
-	$router->get( '/properties', 'PropertyController@show' );
+	$router->get(
+		'/properties',
+		[ 'as' => 'queryProperty', 'uses' => 'PropertyController@index' ]
+	);
 });
