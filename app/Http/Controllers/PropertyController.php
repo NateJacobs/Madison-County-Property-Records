@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\Detail as DetailResource;
+use App\Http\Resources\DetailCollection;
+use App\Models\Detail;
 
 class PropertyController extends Controller {
-	public function show( Request $request ) {
 
+	public function show( Request $request ) {
+		return new DetailCollection(
+			Detail::with( [ 'sales', 'owners' ] )->where( 'id', $request->id )->simplePaginate()
+		);
+	}
+
+	public function index( Request $request ) {
 		$where = $this->build_search_where( $request );
 
 		if ( empty( $where ) ) {
@@ -15,11 +24,14 @@ class PropertyController extends Controller {
 			]);
 		}
 
-		$property_record = \App\Models\Detail::where( $where )->get();
+		$property_record = Detail::where( $where )->paginate(50);
+		$property_record->appends( $request->input() )->links();
 
 		if ( $request->filled('include') ) {
 			$property_record = $this->add_lazy_load( $property_record, $request->input('include') );
 		}
+
+		return new DetailCollection( $property_record );
 
 		return [
 			'count' => $property_record->count(),
