@@ -120,6 +120,14 @@ class PropertyController extends Controller {
 			$where[] = [ 'bedrooms', $request->input('bedrooms') ];
 		}
 
+		if ( $request->filled('full-baths') ) {
+			$where[] = [ 'full_baths', $request->input('full-baths') ];
+		}
+
+		if ( $request->filled('half-baths') ) {
+			$where[] = [ 'half_baths', $request->input('half-baths') ];
+		}
+
 		return $where;
 	}
 }
