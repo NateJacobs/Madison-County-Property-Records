@@ -16,6 +16,6 @@ class Owner extends Model {
 	];
 
 	public function details() {
-		return $this->belongsTo( 'App\Models\Detail' );
+		return $this->hasMany( 'App\Models\Detail', 'id', 'detail_id' );
 	}
 }

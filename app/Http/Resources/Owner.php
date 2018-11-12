@@ -15,6 +15,11 @@ class Owner extends JsonResource {
 			'city' => $this->city,
 			'state' => $this->state,
 			'zipcode' => $this->zipcode,
+			'property' => new OwnerDetailCollection( $this->whenLoaded( 'details' ) ),
+			'links' => [
+				'self' => route( 'singleOwner', [ 'id' => $this->id ] ),
+				'property' => route( 'singleProperty', [ 'id' => $this->detail_id ] ),
+			]
         ];
     }
 }

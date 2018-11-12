@@ -39,4 +39,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
 		'/properties',
 		[ 'as' => 'queryProperty', 'uses' => 'PropertyController@index' ]
 	);
+
+	$router->get(
+			'/owner/{id}',
+			[ 'as' => 'singleOwner', 'uses' => 'OwnerController@show' ]
+	);
 });
