@@ -32,7 +32,7 @@ class Detail extends JsonResource
 			'class_description' => $this->class_description,
 			'description' => $this->description,
 			'owners' => new OwnerCollection( $this->whenLoaded( 'owners' ) ),
-			'sales_history' => Sale::collection( $this->whenLoaded( 'sales' ) ),
+			'sales_history' => new SaleCollection( $this->whenLoaded( 'sales' ) ),
 			'links' => [
 				'self' => route( 'singleProperty', [ 'id' => $this->id ] ),
 				'report' => $this->report_url,

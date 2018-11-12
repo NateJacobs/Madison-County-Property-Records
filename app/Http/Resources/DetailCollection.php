@@ -6,9 +6,9 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class DetailCollection extends ResourceCollection {
 
-    public function toArray($request) {
+    public function toArray( $request ) {
         return [
-            'data' => $this->collection,
-        ];
+			'data' => $this->collection
+		];
     }
 }
