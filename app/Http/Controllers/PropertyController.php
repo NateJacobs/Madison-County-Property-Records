@@ -8,14 +8,23 @@ use App\Http\Resources\DetailCollection;
 use App\Models\Detail;
 
 class PropertyController extends Controller {
-
+	/**
+	 *	Return a single property record by ID.
+	 *
+	*/
 	public function show( Request $request ) {
 		return new DetailCollection(
 			Detail::with( [ 'sales', 'owners' ] )->where( 'id', $request->id )->simplePaginate()
 		);
 	}
 
+	/**
+	 *	Return the property records that match the filter query.
+	 *
+	*/
 	public function index( Request $request ) {
+		$number_of_results = 50;
+
 		$where = $this->build_search_where( $request );
 
 		if ( empty( $where ) ) {
@@ -24,7 +33,15 @@ class PropertyController extends Controller {
 			]);
 		}
 
-		$property_record = Detail::where( $where )->paginate(50);
+		if ( $request->filled('owner-name') ) {
+			$owners = \DB::table('owners')->where( 'name', 'like', '%'.$request->input('owner-name').'%' )->get();
+			$owner_array = array_unique( $owners->pluck('detail_id')->toArray() );
+
+			$property_record = Detail::whereIn( 'id', $owner_array )->paginate( $number_of_results );
+		} else {
+			$property_record = Detail::where( $where )->paginate( $number_of_results );
+		}
+
 		$property_record->appends( $request->input() )->links();
 
 		if ( $request->filled('include') ) {
@@ -32,11 +49,6 @@ class PropertyController extends Controller {
 		}
 
 		return new DetailCollection( $property_record );
-
-		return [
-			'count' => $property_record->count(),
-			'results' => $property_record,
-		];
 	}
 
 	private function add_lazy_load( $query, $type ) {
