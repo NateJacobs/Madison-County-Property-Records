@@ -23,6 +23,9 @@ $app = new Laravel\Lumen\Application(
     realpath(__DIR__.'/../')
 );
 
+$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
+$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
+
 $app->configure('filesystems');
 
 $app->withFacades();
@@ -86,7 +89,11 @@ $app->routeMiddleware([
 
 $app->register( Illuminate\Filesystem\FilesystemServiceProvider::class );
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->bind(\Illuminate\Contracts\Routing\ResponseFactory::class, function () {
+    return new \Laravel\Lumen\Http\ResponseFactory();
+});
+
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
