@@ -93,7 +93,9 @@ $app->bind(\Illuminate\Contracts\Routing\ResponseFactory::class, function () {
     return new \Laravel\Lumen\Http\ResponseFactory();
 });
 
-$app->register(App\Providers\AppServiceProvider::class);
+if ( env('APP_DEBUG') ) {
+	$app->register(App\Providers\AppServiceProvider::class);
+}
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
