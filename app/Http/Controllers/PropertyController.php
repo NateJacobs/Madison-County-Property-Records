@@ -27,7 +27,7 @@ class PropertyController extends Controller {
 
 		$where = $this->build_search_where( $request );
 
-		if ( empty( $where ) ) {
+		if ( empty( $where ) && false === $request->filled('owner-name') ) {
 			return response()->json([
 				'error_msg' => 'You must pass at least one search query'
 			]);
