@@ -14,7 +14,7 @@ class PropertyController extends Controller {
 	*/
 	public function show( Request $request ) {
 		return new DetailCollection(
-			Detail::with( [ 'sales', 'owners' ] )->where( 'id', $request->id )->simplePaginate()
+			Detail::with( [ 'sales', 'owners' ] )->where( 'id', $request->id )->orderBy('street_number')->simplePaginate()
 		);
 	}
 
@@ -37,9 +37,9 @@ class PropertyController extends Controller {
 			$owners = \DB::table('owners')->where( 'name', 'like', '%'.$request->input('owner-name').'%' )->get();
 			$owner_array = array_unique( $owners->pluck('detail_id')->toArray() );
 
-			$property_record = Detail::whereIn( 'id', $owner_array )->paginate( $number_of_results );
+			$property_record = Detail::whereIn( 'id', $owner_array )->orderBy('street_number')->paginate( $number_of_results );
 		} else {
-			$property_record = Detail::where( $where )->paginate( $number_of_results );
+			$property_record = Detail::where( $where )->orderBy('street_number')->paginate( $number_of_results );
 		}
 
 		$property_record->appends( $request->input() )->links();
